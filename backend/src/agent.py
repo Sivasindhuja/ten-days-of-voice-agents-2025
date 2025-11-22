@@ -76,6 +76,7 @@ async def entrypoint(ctx: JobContext):
         tts=murf.TTS(
                 voice="en-US-matthew", 
                 style="Conversation",
+                model="FALCON",
                 tokenizer=tokenize.basic.SentenceTokenizer(min_sentence_len=2),
                 text_pacing=True
             ),
