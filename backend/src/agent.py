@@ -1,13 +1,18 @@
+#smarter way to print logs with additional information.
 import logging
-
+#import env variables from a .env file into the environment.
 from dotenv import load_dotenv
+#livekit library imports for building conversational agents.
+#livekit provides a room for agent and human to talk in real time without pressing buttons.
+
+
 from livekit.agents import (
-    Agent,
-    AgentSession,
+    Agent,#tells the behaviour of the agent.
+    AgentSession,#connect the agent to the room and manage the conversation,connects tts,sst,llm,vad etc also.
     JobContext,
     JobProcess,
-    MetricsCollectedEvent,
-    RoomInputOptions,
+    MetricsCollectedEvent,#saves info like api calls etc
+    RoomInputOptions,#
     WorkerOptions,
     cli,
     metrics,
@@ -18,10 +23,14 @@ from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from tools.orderTool import save_order_to_json  # Import tool
 
 logger = logging.getLogger("agent")
-
+#logger object to log messages with the name "agent".
 load_dotenv(".env.local")
+#load environment variables from the .env.local file.
 
-
+#Agent is a base class of Livekit that represents the blue print of the agent.
+#We create a subclass of Agent called Assistant to define the specific behavior and instructions for our barista agent.
+#instructions are passed to the super class constructor to set up the agent's behavior.
+#system prompt (that guides the agent's behavior during the conversation)=instructions here
 class Assistant(Agent):
     def __init__(self) -> None:
         super().__init__(
@@ -51,11 +60,11 @@ Think step by step and be conversational.
 """,
         )
 
-
+#before starting the agent,load the vad(Voice Activity Detection) model into userdata.
 def prewarm(proc: JobProcess):
     proc.userdata["vad"] = silero.VAD.load()
 
-
+#create the entrypoint function where the agent session is created and started.
 async def entrypoint(ctx: JobContext):
     ctx.log_context_fields = {"room": ctx.room.name}
 
